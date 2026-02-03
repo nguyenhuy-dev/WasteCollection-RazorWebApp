@@ -1,0 +1,125 @@
+﻿@page
+@model WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs.CreateModel
+
+@{
+    ViewData["Title"] = "Create Assignment";
+}
+
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto">
+        
+        <!-- Back Link -->
+        <div class="mb-6">
+            <a asp-page="Index" class="text-green-600 hover:text-green-800 font-medium flex items-center transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Back to List
+            </a>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+            <div class="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4">
+                <h1 class="text-xl font-bold text-white">Create New Assignment</h1>
+                <p class="text-green-100 text-sm mt-1">Fill in the details to assign a new waste collection task.</p>
+            </div>
+
+            <form method="post" class="p-6 md:p-8 space-y-6">
+                <div asp-validation-summary="ModelOnly" class="rounded-md bg-red-50 p-4 mb-4 text-sm text-red-700 border border-red-200" role="alert"></div>
+
+                <!-- Section: Basic Info -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">Basic Info</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <!-- Report ID Dropdown -->
+                        <div>
+                            <label asp-for="CollectorAssignmentsHuyNq.ReportHuyNqid" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                            <select asp-for="CollectorAssignmentsHuyNq.ReportHuyNqid" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border bg-white" asp-items="ViewBag.ReportHuyNqid"></select>
+                        </div>
+
+                        <!-- Status -->
+                        <div>
+                             <label asp-for="CollectorAssignmentsHuyNq.Status" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                            <select asp-for="CollectorAssignmentsHuyNq.Status" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border bg-white">
+                                <option value="Assigned">Assigned</option>
+                                <option value="OnTheWay">On The Way</option>
+                                <option value="Collected">Collected</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                             <span asp-validation-for="CollectorAssignmentsHuyNq.Status" class="text-red-600 text-xs mt-1 block"></span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Section: Schedule & Outcome -->
+                <div>
+                     <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2 mt-2">Schedule & details</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <!-- ETA -->
+                        <div>
+                            <label asp-for="CollectorAssignmentsHuyNq.EstimatedArrivalTime" class="block text-sm font-medium text-gray-700 mb-1">Estimated Arrival</label>
+                            <input asp-for="CollectorAssignmentsHuyNq.EstimatedArrivalTime" type="datetime-local" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border" />
+                            <span asp-validation-for="CollectorAssignmentsHuyNq.EstimatedArrivalTime" class="text-red-600 text-xs mt-1 block"></span>
+                        </div>
+
+                        <!-- Arrival Time -->
+                        <div>
+                            <label asp-for="CollectorAssignmentsHuyNq.ArrivalTime" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                            <input asp-for="CollectorAssignmentsHuyNq.ArrivalTime" type="datetime-local" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border" />
+                            <span asp-validation-for="CollectorAssignmentsHuyNq.ArrivalTime" class="text-red-600 text-xs mt-1 block"></span>
+                        </div>
+
+                        <!-- Completion Time -->
+                        <div>
+                            <label asp-for="CollectorAssignmentsHuyNq.CompletionTime" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                            <input asp-for="CollectorAssignmentsHuyNq.CompletionTime" type="datetime-local" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border" />
+                             <span asp-validation-for="CollectorAssignmentsHuyNq.CompletionTime" class="text-red-600 text-xs mt-1 block"></span>
+                        </div>
+
+                        <!-- Weight -->
+                        <div>
+                            <label asp-for="CollectorAssignmentsHuyNq.CollectedWeight" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                             <div class="relative rounded-md shadow-sm">
+                                <input asp-for="CollectorAssignmentsHuyNq.CollectedWeight" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border pr-12" placeholder="0.00" />
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">kg</span>
+                                </div>
+                            </div>
+                            <span asp-validation-for="CollectorAssignmentsHuyNq.CollectedWeight" class="text-red-600 text-xs mt-1 block"></span>
+                        </div>
+
+                     </div>
+                </div>
+
+                <!-- Section: Additional -->
+                <div>
+                    <!-- Proof Image -->
+                    <div class="mb-6">
+                        <label asp-for="CollectorAssignmentsHuyNq.ProofImageUrl" class="block text-sm font-medium text-gray-700 mb-1">Proof Image URL</label>
+                        <input asp-for="CollectorAssignmentsHuyNq.ProofImageUrl" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border" placeholder="https://..." />
+                        <span asp-validation-for="CollectorAssignmentsHuyNq.ProofImageUrl" class="text-red-600 text-xs mt-1 block"></span>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="mb-2">
+                        <label asp-for="CollectorAssignmentsHuyNq.Notes" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                        <textarea asp-for="CollectorAssignmentsHuyNq.Notes" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border" placeholder="Add any relevant notes..."></textarea>
+                        <span asp-validation-for="CollectorAssignmentsHuyNq.Notes" class="text-red-600 text-xs mt-1 block"></span>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-4 border-t border-gray-100 flex items-center justify-end">
+                    <input type="submit" value="Create Assignment" class="cursor-pointer inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors w-full sm:w-auto" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
