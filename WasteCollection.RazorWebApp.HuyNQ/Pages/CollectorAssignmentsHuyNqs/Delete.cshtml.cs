@@ -44,9 +44,7 @@ namespace WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs
         public async Task<IActionResult> OnPostAsync(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             /*
             var collectorassignmentshuynq = await _context.CollectorAssignmentsHuyNqs.FindAsync(id);

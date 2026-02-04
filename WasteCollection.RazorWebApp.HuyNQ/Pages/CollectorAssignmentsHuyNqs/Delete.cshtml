@@ -99,6 +99,9 @@
                 <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 w-full sm:w-auto">
                     Delete Assignment
                 </button>
+                <button type="submit" id="btnHubDelete" class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 w-full sm:w-auto">
+                    Delete By SignalR
+                </button>
                 <a asp-page="./Index" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-full sm:w-auto">
                     Cancel
                 </a>
@@ -106,3 +109,26 @@
         </div>
     </div>
 </div>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script>
+    "use strict";
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/wasteCollectionHub").build();
+
+    connection.start().then(function () {
+        console.log("Client: Connected to the SignalR Hub");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    document.getElementById("btnHubDelete").addEventListener("click", function (event) {
+        var dataObj = document.getElementById("CollectorAssignmentsHuyNq_AssignmentId").value;
+        console.log(dataObj);
+
+        connection.invoke("HubDelete_CollectorAssignments", dataObj).catch(function (err) {
+            return console.error(err.toString());
+        });
+        // event.preventDefault();
+    });
+</script>

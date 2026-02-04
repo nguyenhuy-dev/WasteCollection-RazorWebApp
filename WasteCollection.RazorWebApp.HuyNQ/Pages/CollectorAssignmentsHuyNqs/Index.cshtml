@@ -50,10 +50,10 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody id="collectorAssignmentTBodyId" class="bg-white divide-y divide-gray-200">
                         @foreach (var item in Model.CollectorAssignmentsHuyNq)
                         {
-                            <tr class="hover:bg-gray-50 transition-colors duration-150 relative">
+                            <tr id="@item.AssignmentId" class="hover:bg-gray-50 transition-colors duration-150 relative">
                                 <td class="px-6 py-4">
                                     <div class="text-sm font-medium text-gray-900">
                                         @Html.DisplayFor(modelItem => item.AssignedDate)
@@ -187,5 +187,22 @@
                 el.classList.add('hidden');
             });
         }
+    });
+</script>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script>
+    "use strict";
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/wasteCollectionHub").build();
+
+    connection.start().then(function () {
+        console.log("Client: Connected to the SignalR Hub");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    connection.on("ReceiveDelete_CollectorAssignments", function (assignmentId) {
+        $('#collectorAssignmentTBodyId').find(`tr[id='${assignmentId}']`).remove();
     });
 </script>

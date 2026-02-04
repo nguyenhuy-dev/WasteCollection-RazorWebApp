@@ -1,3 +1,4 @@
+using WasteCollection.RazorWebApp.HuyNQ.Hubs;
 using WasteCollection.Services.HuyNQ;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,8 @@ builder.Services.AddScoped<SystemUserAccountService>();
 var assemblyService = typeof(IAssemblyReference).Assembly;
 // Add AutoMapper profiles
 builder.Services.AddAutoMapper(cfg => { }, assemblyService);
+
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -33,5 +36,7 @@ app.UseAuthorization();
 app.MapStaticAssets();
 app.MapRazorPages()
    .WithStaticAssets();
+
+app.MapHub<WasteCollectionHub>("/wasteCollectionHub");
 
 app.Run();
