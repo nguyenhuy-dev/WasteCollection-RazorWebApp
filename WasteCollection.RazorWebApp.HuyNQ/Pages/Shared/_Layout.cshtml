@@ -47,7 +47,34 @@
                         </a>
                     </div>
                 </div>
-                
+
+                <!-- Auth Buttons (Desktop) -->
+                <div class="hidden sm:flex sm:items-center sm:ml-6 sm:space-x-3">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <span class="text-sm text-gray-600 font-medium">👋 @User.Identity.Name</span>
+                        <form method="post" asp-page="/Auth/Logout">
+                            <button type="submit"
+                                    class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg border border-red-300 text-red-600 bg-white hover:bg-red-50 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+                                </svg>
+                                Logout
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-page="/Auth/Login"
+                           class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                            </svg>
+                            Login
+                        </a>
+                    }
+                </div>
+
                 <!-- Mobile Menu Button (Simple implementation) -->
                  <div class="-mr-2 flex items-center sm:hidden">
                     <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
@@ -66,6 +93,19 @@
                 <a asp-page="/Index" class="bg-green-50 border-green-500 text-green-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Home</a>
                 <a asp-page="/CollectorAssignmentsHuyNqs/Index" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Collector Assignments</a>
                 <a asp-page="/Privacy" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Privacy</a>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div class="px-4 py-2 text-sm text-gray-600 font-medium border-l-4 border-transparent">👋 @User.Identity.Name</div>
+                    <form method="post" asp-page="/Auth/Logout">
+                        <button type="submit" class="w-full text-left border-transparent text-red-500 hover:bg-red-50 hover:border-red-300 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                            Logout
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-page="/Auth/Login" class="border-transparent text-green-600 hover:bg-green-50 hover:border-green-300 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Login</a>
+                }
             </div>
         </div>
     </header>

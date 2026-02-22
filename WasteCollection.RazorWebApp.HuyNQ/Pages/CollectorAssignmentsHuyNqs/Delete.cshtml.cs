@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WasteCollection.Entities.HuyNQ.Models;
 using WasteCollection.Services.HuyNQ;
 
 namespace WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs
 {
+    [Authorize]
     public class DeleteModel(ICollectorAssignmentsHuyNqService collectorAssignmentsService) : PageModel
     {
         /*

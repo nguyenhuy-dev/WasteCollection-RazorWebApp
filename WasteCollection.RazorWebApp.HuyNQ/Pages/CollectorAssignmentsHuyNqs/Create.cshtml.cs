@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WasteCollection.Services.HuyNQ;
@@ -6,6 +7,7 @@ using WasteCollection.Services.HuyNQ.DTOs;
 
 namespace WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs;
 
+[Authorize]
 public class CreateModel(ICollectorAssignmentsHuyNqService collectorAssignmentsService,
     ReportsHuyNqService reportsService) : PageModel
 {

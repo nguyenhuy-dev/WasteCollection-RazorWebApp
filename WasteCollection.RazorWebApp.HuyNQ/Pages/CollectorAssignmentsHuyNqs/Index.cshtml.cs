@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using WasteCollection.Services.HuyNQ;
 using WasteCollection.Services.HuyNQ.DTOs;
 
 namespace WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs
 {
-    public class IndexModel(ICollectorAssignmentsHuyNqService collectorAssignmentsService, 
-        ReportsHuyNqService reportsService) : PageModel
+    [Authorize]
+    public class IndexModel(ICollectorAssignmentsHuyNqService collectorAssignmentsService) : PageModel
     {
         /*
         private readonly WasteCollection.Entities.HuyNQ.Models.WasteCollectionDbContext _context;
@@ -17,8 +18,6 @@ namespace WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs
         */
 
         private readonly ICollectorAssignmentsHuyNqService _collectorAssignmentsService = collectorAssignmentsService;
-
-        private readonly ReportsHuyNqService _reportsService = reportsService;
 
         public IList<CollectorAssignmentsHuyNqGetAllDto> CollectorAssignmentsHuyNq { get;set; } = default!;
 
