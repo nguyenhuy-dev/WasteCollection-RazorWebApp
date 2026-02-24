@@ -24,6 +24,71 @@
             </a>
         </div>
 
+        <!-- Search Form -->
+        <form method="get" class="mb-6 bg-white rounded-2xl shadow-md border border-gray-100 p-5">
+            <div class="flex flex-col md:flex-row gap-4 items-end">
+                <!-- Status -->
+                <div class="flex-1">
+                    <label for="SearchStatus" class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Status</label>
+                    <select id="SearchStatus" name="SearchOptions.Status"
+                            class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400 transition bg-white">
+                        <option value="">— All —</option>
+                        <option value="Assigned"   selected="@(Model.SearchOptions.Status == "Assigned"   ? "selected" : null)">Assigned</option>
+                        <option value="OnTheWay"   selected="@(Model.SearchOptions.Status == "OnTheWay"   ? "selected" : null)">On The Way</option>
+                        <option value="Collected"  selected="@(Model.SearchOptions.Status == "Collected"  ? "selected" : null)">Collected</option>
+                        <option value="Cancelled"  selected="@(Model.SearchOptions.Status == "Cancelled"  ? "selected" : null)">Cancelled</option>
+                    </select>
+                </div>
+
+                <!-- Collected Weight -->
+                <div class="flex-1">
+                    <label for="SearchCollectedWeight" class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Collected Weight (kg)</label>
+                    <input id="SearchCollectedWeight" name="SearchOptions.CollectedWeight" type="number" step="0.01" min="0"
+                           value="@Model.SearchOptions.CollectedWeight"
+                           placeholder="e.g. 12.5"
+                           class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400 transition" />
+                </div>
+
+                <!-- Assigned Date -->
+                <div class="flex-1">
+                    <label for="SearchAssignedDate" class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Assigned Date</label>
+                    <input id="SearchAssignedDate" name="SearchOptions.AssignedDate" type="date"
+                           value="@(Model.SearchOptions.AssignedDate.HasValue ? Model.SearchOptions.AssignedDate.Value.ToString("yyyy-MM-dd") : "")"
+                           class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400 transition" />
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex gap-2 shrink-0">
+                    <button type="submit"
+                            class="inline-flex items-center px-5 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg shadow-sm transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+                        </svg>
+                        Search
+                    </button>
+                    @if (Model.IsSearching)
+                    {
+                        <a asp-page="./Index" class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-medium rounded-lg transition-all duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Clear
+                        </a>
+                    }
+                </div>
+            </div>
+
+            @if (Model.IsSearching)
+            {
+                <div class="mt-3 flex items-center gap-2 text-xs text-green-700 font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
+                    </svg>
+                    Showing filtered results &mdash; @Model.PagedResult.TotalCount record(s) found
+                </div>
+            }
+        </form>
+
         <!-- Content Card -->
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
             <div class="overflow-x-auto">
@@ -34,7 +99,7 @@
                                 Assignment Info
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                @Html.DisplayNameFor(model => model.CollectorAssignmentsHuyNq[0].Status)
+                                Status
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
                                 Timings
@@ -51,7 +116,7 @@
                         </tr>
                     </thead>
                     <tbody id="collectorAssignmentTBodyId" class="bg-white divide-y divide-gray-200">
-                        @foreach (var item in Model.CollectorAssignmentsHuyNq)
+                        @foreach (var item in Model.PagedResult.Items)
                         {
                             <tr id="@item.AssignmentId" class="hover:bg-gray-50 transition-colors duration-150 relative">
                                 <td class="px-6 py-4">
@@ -151,7 +216,7 @@
                         }
                     </tbody>
                 </table>
-                @if (Model.CollectorAssignmentsHuyNq == null || !Model.CollectorAssignmentsHuyNq.Any())
+                @if (!Model.PagedResult.Items.Any())
                 {
                     <div class="text-center py-12">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -162,6 +227,107 @@
                     </div>
                 }
             </div>
+
+            @{
+                var pr = Model.PagedResult;
+                // Build a helper to generate page links preserving all current query params
+                string PageUrl(int page)
+                {
+                    var qs = new System.Text.StringBuilder("?");
+                    if (!string.IsNullOrEmpty(Model.SearchOptions.Status))
+                        qs.Append($"SearchOptions.Status={Uri.EscapeDataString(Model.SearchOptions.Status)}&");
+                    if (Model.SearchOptions.CollectedWeight.HasValue)
+                        qs.Append($"SearchOptions.CollectedWeight={Model.SearchOptions.CollectedWeight}&");
+                    if (Model.SearchOptions.AssignedDate.HasValue)
+                        qs.Append($"SearchOptions.AssignedDate={Model.SearchOptions.AssignedDate.Value:yyyy-MM-dd}&");
+                    qs.Append($"SearchOptions.PageNumber={page}&SearchOptions.PageSize={pr.PageSize}");
+                    return Url.Page("./Index") + qs.ToString();
+                }
+            }
+
+            @if (pr.TotalPages > 1)
+            {
+                <div class="px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <!-- Info text -->
+                    <p class="text-sm text-gray-500">
+                        Showing
+                        <span class="font-semibold text-gray-700">@((pr.PageNumber - 1) * pr.PageSize + 1)</span>
+                        –
+                        <span class="font-semibold text-gray-700">@Math.Min(pr.PageNumber * pr.PageSize, pr.TotalCount)</span>
+                        of
+                        <span class="font-semibold text-gray-700">@pr.TotalCount</span>
+                        results
+                    </p>
+
+                    <!-- Page buttons -->
+                    <nav class="flex items-center gap-1">
+                        @* Previous *@
+                        @if (pr.HasPrev)
+                        {
+                            <a href="@PageUrl(pr.PageNumber - 1)"
+                               class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                </svg>
+                                Prev
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-300 bg-gray-50 border border-gray-100 rounded-lg cursor-not-allowed">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                </svg>
+                                Prev
+                            </span>
+                        }
+
+                        @* Page numbers (show at most 5 around current page) *@
+                        @{
+                            int startPage = Math.Max(1, pr.PageNumber - 2);
+                            int endPage   = Math.Min(pr.TotalPages, startPage + 4);
+                            startPage     = Math.Max(1, endPage - 4);
+                        }
+                        @for (int p = startPage; p <= endPage; p++)
+                        {
+                            if (p == pr.PageNumber)
+                            {
+                                <span class="inline-flex items-center justify-center w-9 h-9 text-sm font-semibold text-white bg-green-600 border border-green-600 rounded-lg">
+                                    @p
+                                </span>
+                            }
+                            else
+                            {
+                                <a href="@PageUrl(p)"
+                                   class="inline-flex items-center justify-center w-9 h-9 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+                                    @p
+                                </a>
+                            }
+                        }
+
+                        @* Next *@
+                        @if (pr.HasNext)
+                        {
+                            <a href="@PageUrl(pr.PageNumber + 1)"
+                               class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+                                Next
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-300 bg-gray-50 border border-gray-100 rounded-lg cursor-not-allowed">
+                                Next
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </span>
+                        }
+                    </nav>
+                </div>
+            }
         </div>
     </div>
 </div>

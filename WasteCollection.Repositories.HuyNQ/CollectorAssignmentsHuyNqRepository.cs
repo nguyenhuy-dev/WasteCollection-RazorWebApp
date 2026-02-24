@@ -29,13 +29,13 @@ public class CollectorAssignmentsHuyNqRepository : GenericRepository<CollectorAs
         return item ?? new();
     }
 
-    public async Task<List<CollectorAssignmentsHuyNq>> SearchAsync(CollectorAssignmentsHuyNqSearchOptions options)
+    public async Task<PaginatedResult<CollectorAssignmentsHuyNq>> SearchAsync(CollectorAssignmentsHuyNqSearchOptions options)
     {
         var status = options.Status ?? string.Empty;
         var collectedWeight = options.CollectedWeight;
         var assignedDate = options.AssignedDate;
 
-        var items = await _context.CollectorAssignmentsHuyNqs
+        var query = _context.CollectorAssignmentsHuyNqs
             .Include(c => c.ReportHuyNq)
             .Where(c =>
                 (c.Status.Contains(status) || string.IsNullOrEmpty(status)) &&
@@ -47,9 +47,18 @@ public class CollectorAssignmentsHuyNqRepository : GenericRepository<CollectorAs
                         c.AssignedDate.Value.Date == assignedDate.Value.Date
                     )
                 )
-            )
+            );
+
+        var totalCount = await query.CountAsync();
+
+        var pageNumber = options.PageNumber < 1 ? 1 : options.PageNumber;
+        var pageSize   = options.PageSize   < 1 ? 5 : options.PageSize;
+
+        var items = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
-        return items;
+        return new PaginatedResult<CollectorAssignmentsHuyNq>(items, totalCount, pageNumber, pageSize);
     }
 }

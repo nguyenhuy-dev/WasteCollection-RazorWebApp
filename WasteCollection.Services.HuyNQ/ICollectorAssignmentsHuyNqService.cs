@@ -10,7 +10,7 @@ public interface ICollectorAssignmentsHuyNqService
 
     Task<CollectorAssignmentsHuyNq> GetByIdAsync(Guid id);
 
-    Task<List<CollectorAssignmentsHuyNqGetAllDto>> SearchAsync(CollectorAssignmentsHuyNqSearchOptions options);
+    Task<PaginatedResult<CollectorAssignmentsHuyNqGetAllDto>> SearchAsync(CollectorAssignmentsHuyNqSearchOptions options);
 
     Task<int> CreateAsync(CollectorAssignmentsHuyNqCreatedDto request);
 

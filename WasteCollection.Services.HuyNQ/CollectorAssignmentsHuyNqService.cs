@@ -86,21 +86,24 @@ public class CollectorAssignmentsHuyNqService : ICollectorAssignmentsHuyNqServic
         }
     }
 
-    public async Task<List<CollectorAssignmentsHuyNqGetAllDto>> SearchAsync(CollectorAssignmentsHuyNqSearchOptions options)
+    public async Task<PaginatedResult<CollectorAssignmentsHuyNqGetAllDto>> SearchAsync(CollectorAssignmentsHuyNqSearchOptions options)
     {
         try
         {
-            var asms = await _collectorAsmRepository.SearchAsync(options);
+            var pagedAsms = await _collectorAsmRepository.SearchAsync(options);
 
-            var asmDtos = asms.Select(asm =>
+            var dtos = pagedAsms.Items.Select(asm =>
             {
-                var asmDto = _mapper.Map<CollectorAssignmentsHuyNq, CollectorAssignmentsHuyNqGetAllDto>(asm);
-                asmDto.Address = asm.ReportHuyNq.Address;
+                var dto = _mapper.Map<CollectorAssignmentsHuyNq, CollectorAssignmentsHuyNqGetAllDto>(asm);
+                dto.Address = asm.ReportHuyNq.Address;
+                return dto;
+            }).ToList();
 
-                return asmDto;
-            });
-
-            return [.. asmDtos];
+            return new PaginatedResult<CollectorAssignmentsHuyNqGetAllDto>(
+                dtos,
+                pagedAsms.TotalCount,
+                pagedAsms.PageNumber,
+                pagedAsms.PageSize);
         }
         catch (Exception)
         {
