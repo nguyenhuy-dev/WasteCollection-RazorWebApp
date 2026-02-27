@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WasteCollection.Entities.HuyNQ.Models;
 using WasteCollection.Services.HuyNQ;
+using WasteCollection.Services.HuyNQ.DTOs;
 
 namespace WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs;
 
@@ -20,7 +21,7 @@ public class DetailsModel(ICollectorAssignmentsHuyNqService collectorAssignments
 
     private readonly ICollectorAssignmentsHuyNqService _collectorAssignmentsService = collectorAssignmentsService;
 
-    public CollectorAssignmentsHuyNq CollectorAssignmentsHuyNq { get; set; } = default!;
+    public CollectorAssignmentsHuyNqGetDto CollectorAssignmentsHuyNq { get; set; } = default!;
 
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {

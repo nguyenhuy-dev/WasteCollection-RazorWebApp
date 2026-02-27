@@ -11,5 +11,11 @@ public class CollectorAssignmentsHuyNqProfile : Profile
         CreateMap<CollectorAssignmentsHuyNqCreatedDto, CollectorAssignmentsHuyNq>(MemberList.None);
 
         CreateMap<CollectorAssignmentsHuyNq, CollectorAssignmentsHuyNqGetAllDto>(MemberList.None);
+
+        CreateMap<CollectorAssignmentsHuyNq, CollectorAssignmentsHuyNqGetDto>(MemberList.None);
+
+        CreateMap<CollectorAssignmentsHuyNqUpdatedDto, CollectorAssignmentsHuyNq>(MemberList.None);
+
+        CreateMap<CollectorAssignmentsHuyNqGetDto, CollectorAssignmentsHuyNqUpdatedDto>(MemberList.None);
     }
 }

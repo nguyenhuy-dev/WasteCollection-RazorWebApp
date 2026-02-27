@@ -40,14 +40,14 @@
 
                         <!-- Status -->
                         <div>
-                             <label asp-for="CollectorAssignmentsHuyNq.Status" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                            <label asp-for="CollectorAssignmentsHuyNq.Status" class="block text-sm font-medium text-gray-700 mb-1"></label>
                             <select asp-for="CollectorAssignmentsHuyNq.Status" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border bg-white">
                                 <option value="Assigned">Assigned</option>
                                 <option value="OnTheWay">On The Way</option>
                                 <option value="Collected">Collected</option>
                                 <option value="Cancelled">Cancelled</option>
                             </select>
-                             <span asp-validation-for="CollectorAssignmentsHuyNq.Status" class="text-red-600 text-xs mt-1 block"></span>
+                            <span asp-validation-for="CollectorAssignmentsHuyNq.Status" class="text-red-600 text-xs mt-1 block"></span>
                         </div>
 
                     </div>
@@ -55,8 +55,8 @@
 
                 <!-- Section: Schedule & Outcome -->
                 <div>
-                     <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2 mt-2">Schedule & details</h3>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2 mt-2">Schedule & details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                         <!-- ETA -->
                         <div>
@@ -76,13 +76,13 @@
                         <div>
                             <label asp-for="CollectorAssignmentsHuyNq.CompletionTime" class="block text-sm font-medium text-gray-700 mb-1"></label>
                             <input asp-for="CollectorAssignmentsHuyNq.CompletionTime" type="datetime-local" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border" />
-                             <span asp-validation-for="CollectorAssignmentsHuyNq.CompletionTime" class="text-red-600 text-xs mt-1 block"></span>
+                            <span asp-validation-for="CollectorAssignmentsHuyNq.CompletionTime" class="text-red-600 text-xs mt-1 block"></span>
                         </div>
 
                         <!-- Weight -->
                         <div>
                             <label asp-for="CollectorAssignmentsHuyNq.CollectedWeight" class="block text-sm font-medium text-gray-700 mb-1"></label>
-                             <div class="relative rounded-md shadow-sm">
+                            <div class="relative rounded-md shadow-sm">
                                 <input asp-for="CollectorAssignmentsHuyNq.CollectedWeight" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border pr-12" placeholder="0.00" />
                                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                                     <span class="text-gray-500 sm:text-sm">kg</span>
@@ -91,7 +91,7 @@
                             <span asp-validation-for="CollectorAssignmentsHuyNq.CollectedWeight" class="text-red-600 text-xs mt-1 block"></span>
                         </div>
 
-                     </div>
+                    </div>
                 </div>
 
                 <!-- Section: Additional -->
@@ -112,7 +112,8 @@
                 </div>
 
                 <!-- Submit Button -->
-                <div class="pt-4 border-t border-gray-100 flex items-center justify-end">
+                <div class="pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
+                    <button asp-page-handler="HubCreate" type="submit" id="btnHubCreate" class="cursor-pointer inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors w-full sm:w-auto">Create by SignalR</button>
                     <input type="submit" value="Create Assignment" class="cursor-pointer inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors w-full sm:w-auto" />
                 </div>
             </form>
@@ -121,5 +122,41 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+
+@* <script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script>
+    "use strict";
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/wasteCollectionHub").build();
+
+    connection.start().then(function () {
+        console.log("Connected to the SignalR Hub");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    document.getElementById("btnHubCreate").addEventListener("click", function (event) {
+        
+        var dataObj = JSON.stringify({
+            ReportHuyNqid: document.getElementById("CollectorAssignmentsHuyNq_ReportHuyNqid").value,
+            Status: document.getElementById("CollectorAssignmentsHuyNq_Status").value,
+            EstimatedArrivalTime: document.getElementById("CollectorAssignmentsHuyNq_EstimatedArrivalTime").value,
+            ArrivalTime: document.getElementById("CollectorAssignmentsHuyNq_ArrivalTime").value,
+            CompletionTime: document.getElementById("CollectorAssignmentsHuyNq_CompletionTime").value,
+            CollectedWeight: document.getElementById("CollectorAssignmentsHuyNq_CollectedWeight").value,
+            ProofImageUrl: document.getElementById("CollectorAssignmentsHuyNq_ProofImageUrl").value,
+            Notes: document.getElementById("CollectorAssignmentsHuyNq_Notes").value
+        });
+
+        connection.invoke("HubCreate_CollectorAssignments", dataObj).catch(function (err) {
+            return console.error(err.toString());
+        });
+        event.preventDefault();
+
+    });
+
+</script> *@

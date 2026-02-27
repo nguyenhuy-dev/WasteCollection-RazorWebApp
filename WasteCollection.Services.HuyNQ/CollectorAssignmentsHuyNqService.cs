@@ -72,13 +72,17 @@ public class CollectorAssignmentsHuyNqService : ICollectorAssignmentsHuyNqServic
         }
     }
 
-    public async Task<CollectorAssignmentsHuyNq> GetByIdAsync(Guid id)
+    public async Task<CollectorAssignmentsHuyNqGetDto> GetByIdAsync(Guid id)
     {
         try
         {
             var asm = await _collectorAsmRepository.GetById(id) 
                 ?? throw new NotFoundException("Collector Assignment not found.");
-            return asm;
+            
+            var asmDto = _mapper.Map<CollectorAssignmentsHuyNq, CollectorAssignmentsHuyNqGetDto>(asm);
+            asmDto.Address = asm.ReportHuyNq.Address;
+
+            return asmDto;
         } 
         catch (Exception)
         {
@@ -111,10 +115,12 @@ public class CollectorAssignmentsHuyNqService : ICollectorAssignmentsHuyNqServic
         }
     }
 
-    public async Task<int> UpdateAsync(CollectorAssignmentsHuyNq asm)
+    public async Task<int> UpdateAsync(CollectorAssignmentsHuyNqUpdatedDto dto)
     {
         try
         {
+            var asm = _mapper.Map<CollectorAssignmentsHuyNqUpdatedDto, CollectorAssignmentsHuyNq>(dto);
+
             return await _collectorAsmRepository.UpdateAsync(asm);
         }
         catch (Exception)

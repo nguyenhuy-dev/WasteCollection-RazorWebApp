@@ -17,7 +17,9 @@
             </a>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100" id="CollectorAssignmentsHuyNqDetailId">
+            @Html.HiddenFor(model => model.CollectorAssignmentsHuyNq.AssignmentId)
+
             <!-- Header -->
             <div class="bg-gradient-to-r from-green-600 to-green-700 px-6 py-5 md:flex md:items-center md:justify-between">
                 <div class="flex items-center">
@@ -124,9 +126,9 @@
                                 Address
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900 bg-gray-50 p-3 rounded-lg border border-gray-100">
-                                @Html.DisplayFor(model => model.CollectorAssignmentsHuyNq.ReportHuyNq.Address)
+                                @Html.DisplayFor(model => model.CollectorAssignmentsHuyNq.Address)
                                 <span class="text-gray-400 mx-2">|</span>
-                                <span class="text-gray-600">@Html.DisplayFor(model => model.CollectorAssignmentsHuyNq.ReportHuyNq.Address)</span>
+                                <span class="text-gray-600">@Html.DisplayFor(model => model.CollectorAssignmentsHuyNq.Address)</span>
                             </dd>
                         </div>
 
@@ -189,3 +191,29 @@
         </div>
     </div>
 </div>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script>
+    "use strict";
+    
+    var connection = new signalR.HubConnectionBuilder().withUrl("/wasteCollectionHub").build();
+
+    connection.start().then(function () {
+        console.log("Connected to the SignalR Hub");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    connection.on("ReceiveDelete_CollectorAssignments", function (AssignmentId) {
+        var assignmentIdHidden = document.getElementById("CollectorAssignmentsHuyNq_AssignmentId").value;
+
+        if (assignmentIdHidden == AssignmentId) {
+            document.getElementById("CollectorAssignmentsHuyNqDetailId").innerHTML = "This item had deleted";
+        } else {
+            //alert($(`#${CashDepositSlipId}`).value + " not found");
+            alert(AssignmentId + " not found");
+        }
+    });
+    
+
+</script>

@@ -1,15 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using WasteCollection.Entities.HuyNQ.Models;
 using WasteCollection.Services.HuyNQ;
+using WasteCollection.Services.HuyNQ.DTOs;
 
 namespace WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs
 {
     [Authorize]
     public class EditModel(ICollectorAssignmentsHuyNqService collectorAssignmentsService,
-        ReportsHuyNqService reportsService) : PageModel
+        ReportsHuyNqService reportsService, IMapper mapper) : PageModel
     {
         /*
         private readonly WasteCollection.Entities.HuyNQ.Models.WasteCollectionDbContext _context;
@@ -22,8 +23,10 @@ namespace WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs
         private readonly ICollectorAssignmentsHuyNqService _collectorAssignmentsService = collectorAssignmentsService;
         private readonly ReportsHuyNqService _reportsService = reportsService;
 
+        private readonly IMapper _mapper = mapper;
+
         [BindProperty]
-        public CollectorAssignmentsHuyNq CollectorAssignmentsHuyNq { get; set; } = default!;
+        public CollectorAssignmentsHuyNqUpdatedDto CollectorAssignmentsHuyNq { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
@@ -37,7 +40,7 @@ namespace WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs
             if (collectorassignmentshuynq == null)
                 return NotFound();
 
-            CollectorAssignmentsHuyNq = collectorassignmentshuynq;
+            CollectorAssignmentsHuyNq = _mapper.Map<CollectorAssignmentsHuyNqGetDto, CollectorAssignmentsHuyNqUpdatedDto>(collectorassignmentshuynq);
 
             var reports = await _reportsService.GetAllAsync();
 

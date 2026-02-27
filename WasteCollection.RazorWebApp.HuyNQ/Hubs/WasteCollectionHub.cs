@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using WasteCollection.Services.HuyNQ;
+using Newtonsoft.Json;
+using WasteCollection.Services.HuyNQ.DTOs;
 
 namespace WasteCollection.RazorWebApp.HuyNQ.Hubs;
 
-public class WasteCollectionHub(ICollectorAssignmentsHuyNqService collectorAssignmentsService,
-    ReportsHuyNqService reportsService) : Hub
+public class WasteCollectionHub : Hub
 {
-    private readonly ICollectorAssignmentsHuyNqService _collectorAssignmentsService = collectorAssignmentsService;
-    private readonly ReportsHuyNqService _reportsService = reportsService;
-
     public async Task HubDelete_CollectorAssignments(string id)
     {
         await Clients.All.SendAsync("ReceiveDelete_CollectorAssignments", id);
-        // await _collectorAssignmentsService.DeleteAsync(Guid.Parse(id));
+    }
+
+    public async Task HubCreate_CollectorAssignments(string asmJson)
+    {
+        var asm = JsonConvert.DeserializeObject<CollectorAssignmentsHuyNqGetAllDto>(asmJson);
+        await Clients.All.SendAsync("ReceiveCreate_CollectorAssignments", asm);
     }
 }
