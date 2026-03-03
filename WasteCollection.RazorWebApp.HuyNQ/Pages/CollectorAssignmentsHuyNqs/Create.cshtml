@@ -126,37 +126,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-
-@* <script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script>
-    "use strict";
-
-    var connection = new signalR.HubConnectionBuilder().withUrl("/wasteCollectionHub").build();
-
-    connection.start().then(function () {
-        console.log("Connected to the SignalR Hub");
-    }).catch(function (err) {
-        return console.error(err.toString());
-    });
-
-    document.getElementById("btnHubCreate").addEventListener("click", function (event) {
-        
-        var dataObj = JSON.stringify({
-            ReportHuyNqid: document.getElementById("CollectorAssignmentsHuyNq_ReportHuyNqid").value,
-            Status: document.getElementById("CollectorAssignmentsHuyNq_Status").value,
-            EstimatedArrivalTime: document.getElementById("CollectorAssignmentsHuyNq_EstimatedArrivalTime").value,
-            ArrivalTime: document.getElementById("CollectorAssignmentsHuyNq_ArrivalTime").value,
-            CompletionTime: document.getElementById("CollectorAssignmentsHuyNq_CompletionTime").value,
-            CollectedWeight: document.getElementById("CollectorAssignmentsHuyNq_CollectedWeight").value,
-            ProofImageUrl: document.getElementById("CollectorAssignmentsHuyNq_ProofImageUrl").value,
-            Notes: document.getElementById("CollectorAssignmentsHuyNq_Notes").value
-        });
-
-        connection.invoke("HubCreate_CollectorAssignments", dataObj).catch(function (err) {
-            return console.error(err.toString());
-        });
-        event.preventDefault();
-
-    });
-
-</script> *@

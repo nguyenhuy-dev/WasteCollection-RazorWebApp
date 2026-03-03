@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
+using WasteCollection.RazorWebApp.HuyNQ.Hubs;
 using WasteCollection.Services.HuyNQ;
 using WasteCollection.Services.HuyNQ.DTOs;
 
@@ -10,7 +12,7 @@ namespace WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs
 {
     [Authorize]
     public class EditModel(ICollectorAssignmentsHuyNqService collectorAssignmentsService,
-        ReportsHuyNqService reportsService, IMapper mapper) : PageModel
+        ReportsHuyNqService reportsService, IMapper mapper, IHubContext<WasteCollectionHub> hubContext) : PageModel
     {
         /*
         private readonly WasteCollection.Entities.HuyNQ.Models.WasteCollectionDbContext _context;
@@ -24,6 +26,8 @@ namespace WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs
         private readonly ReportsHuyNqService _reportsService = reportsService;
 
         private readonly IMapper _mapper = mapper;
+        
+        private readonly IHubContext<WasteCollectionHub> _hubContext = hubContext;
 
         [BindProperty]
         public CollectorAssignmentsHuyNqUpdatedDto CollectorAssignmentsHuyNq { get; set; } = default!;
@@ -86,10 +90,31 @@ namespace WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs
             return RedirectToPage("./Index");
         }
 
-        //private bool CollectorAssignmentsHuyNqExists(Guid id)
-        //{
-        //    //return _context.CollectorAssignmentsHuyNqs.Any(e => e.AssignmentId == id);
-        //    return CollectorAssignmentsHuyNq != null;
-        //}
+        public async Task<IActionResult> OnPostHubEditAsync()
+        {
+            if (!ModelState.IsValid)
+                return Page();
+
+            //_context.Attach(CollectorAssignmentsHuyNq).State = EntityState.Modified;
+
+            try
+            {
+                //await _context.SaveChangesAsync();
+                var result = await _collectorAssignmentsService.UpdateAsync(CollectorAssignmentsHuyNq);
+
+                var asm = await _collectorAssignmentsService.GetByIdAsync(CollectorAssignmentsHuyNq.AssignmentId);
+
+                await _hubContext.Clients.All.SendAsync("ReceiveEdit_CollectorAssignments", asm);
+
+                if (result > 0)
+                    return RedirectToPage("./Index");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"An error occurred while updating the Collector Assignment: {ex.Message}");
+            }
+
+            return RedirectToPage("./Index");
+        }
     }
 }

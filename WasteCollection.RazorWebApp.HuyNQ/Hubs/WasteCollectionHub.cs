@@ -13,7 +13,13 @@ public class WasteCollectionHub : Hub
 
     public async Task HubCreate_CollectorAssignments(string asmJson)
     {
-        var asm = JsonConvert.DeserializeObject<CollectorAssignmentsHuyNqGetAllDto>(asmJson);
+        var asm = JsonConvert.DeserializeObject<CollectorAssignmentsHuyNqGetDto>(asmJson);
         await Clients.All.SendAsync("ReceiveCreate_CollectorAssignments", asm);
+    }
+
+    public async Task HubEdit_CollectorAssignments(string asmJson)
+    {
+        var asm = JsonConvert.DeserializeObject<CollectorAssignmentsHuyNqGetDto>(asmJson);
+        await Clients.All.SendAsync("ReceiveEdit_CollectorAssignments", asm);
     }
 }
