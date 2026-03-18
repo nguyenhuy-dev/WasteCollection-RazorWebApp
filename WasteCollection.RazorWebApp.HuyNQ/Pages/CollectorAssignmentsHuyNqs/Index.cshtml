@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model WasteCollection.RazorWebApp.HuyNQ.Pages.CollectorAssignmentsHuyNqs.IndexModel
 
 @{
@@ -248,14 +248,13 @@
             @if (pr.TotalPages > 1)
             {
                 <div class="px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <!-- Info text -->
-                    <p class="text-sm text-gray-500">
+                    <p class="text-sm text-gray-500" id="pagination-info-text">
                         Showing
                         <span class="font-semibold text-gray-700">@((pr.PageNumber - 1) * pr.PageSize + 1)</span>
                         –
                         <span class="font-semibold text-gray-700">@Math.Min(pr.PageNumber * pr.PageSize, pr.TotalCount)</span>
                         of
-                        <span class="font-semibold text-gray-700">@pr.TotalCount</span>
+                        <span class="font-semibold text-gray-700" id="pagination-total-count">@pr.TotalCount</span>
                         results
                     </p>
 
@@ -370,7 +369,25 @@
 
     // Handle assignment deletion
     connection.on("ReceiveDelete_CollectorAssignments", function (assignmentId) {
-        $('#collectorAssignmentTBodyId').find(`tr[id='${assignmentId}']`).remove();
+        const row = document.getElementById(assignmentId);
+        if (row) {
+            row.remove();
+            
+            // Update total count if element exists
+            const totalCountEl = document.getElementById('pagination-total-count');
+            if (totalCountEl) {
+                let currentTotal = parseInt(totalCountEl.innerText) || 0;
+                if (currentTotal > 0) {
+                    totalCountEl.innerText = (currentTotal - 1).toString();
+                }
+            }
+
+            if(typeof showToast === "function") {
+                showToast("Assignment deleted successfully.", "error");
+            }
+        } else {
+             $('#collectorAssignmentTBodyId').find(`tr[id='${assignmentId}']`).remove();
+        }
     });
 
     // Handle assignment creation
@@ -510,7 +527,23 @@
         `;
     
         // Notice
-        $('#collectorAssignmentTBodyId').prepend(tr)
+        const tbody = document.getElementById('collectorAssignmentTBodyId');
+        if (tbody) {
+            tbody.insertAdjacentHTML('afterbegin', tr);
+
+            // Update total count if element exists
+            const totalCountEl = document.getElementById('pagination-total-count');
+            if (totalCountEl) {
+                let currentTotal = parseInt(totalCountEl.innerText) || 0;
+                totalCountEl.innerText = (currentTotal + 1).toString();
+            }
+
+            if(typeof showToast === "function") {
+                showToast("New assignment created successfully.", "success");
+            }
+        } else {
+            $('#collectorAssignmentTBodyId').prepend(tr);
+        }
     });
 
         // Handle assignment update (EDIT)
